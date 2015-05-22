@@ -2,6 +2,7 @@ from network import Handler, poll
 import sys
 from threading import Thread
 from time import sleep
+from server import output_to_file
 
 myname = raw_input('What is your name? ')
 
@@ -32,6 +33,8 @@ while 1:
 
     if mytxt == ':e':
         print 'lolololololol'
+    elif mytxt == ":s":
+        output_to_file()
     
     if mytxt in options:
         client.do_send({'option': options[mytxt], 'txt': mytxt})

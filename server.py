@@ -26,15 +26,15 @@ class MyHandler(Handler):
 
 	def on_msg(self, msg):
 		if type(msg) is dict:
-            if 'join' in msg:
-                print msg
-                self.do_send('Hello ' + msg['join'] + '!\n' + createMenu())
-            elif 'option' in msg:
-                print msg
-                agentMessage = "Checking for available agent now..."
-                self.do_send('You would like to ' + msg['option'] + '. ' + agentMessage)
-		else
-            print msg
+			if 'join' in msg:
+				print msg
+				self.do_send('Hello ' + msg['join'] + '!\n' + createMenu())
+			elif 'option' in msg:
+				print msg
+				agentMessage = "Checking for available agent now..."
+				self.do_send('You would like to ' + msg['option'] + '. ' + agentMessage)
+		else:
+			print msg
 
 class ServerListener(Listener):
 
