@@ -29,9 +29,13 @@ thread.start()
 while 1:
     mytxt = sys.stdin.readline().rstrip()
     options = {'1':'change order', '2':'cancel order', '3':'get ETA', '4':'ask general questions'}
+
+    if mytxt == ':e':
+        print 'lolololololol'
+    
     if mytxt in options:
         client.do_send({'option': options[mytxt], 'txt': mytxt})
-    elif mytxt == '5':
+    elif mytxt == '5' or mytxt.lower() == ':q':
         print "Closing connection to server."
         sys.exit()
     else:
