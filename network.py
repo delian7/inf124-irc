@@ -112,7 +112,8 @@ class Listener(asyncore.dispatcher):
         self.handler_class = handler_class
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)  # TCP
         self.bind(('', port))
-        self.listen(5)  # max 5 incoming connections at once (Windows' limit)
+        self.listen(5)
+        self.connections = [] # max 5 incoming connections at once (Windows' limit)
 
     def handle_accept(self):  # called on the passive side
         accept_result = self.accept()
@@ -121,7 +122,10 @@ class Listener(asyncore.dispatcher):
             h = self.handler_class(host, port, sock)
             self.on_accept(h)
             h.on_open()
-    
+            self.connections.append((port, host, sock))
+
+
+
     # API you can use
     def stop(self):
         self.close()
