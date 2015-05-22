@@ -3,6 +3,7 @@ import sys
 from threading import Thread
 from time import sleep
 
+agent_free = true
 
 myname = raw_input('What is your name? ')
 
@@ -22,11 +23,26 @@ def periodic_poll():
     while 1:
         poll()
         sleep(0.05)  # seconds
+
+
+def change_order():
+    order_number = raw_input("What is your order number?")
+    
+    
+    
                             
 thread = Thread(target=periodic_poll)
 thread.daemon = True  # die when the main thread dies 
 thread.start()
 
+
 while 1:
-    mytxt = sys.stdin.readline().rstrip()
-    client.do_send({'speak': myname, 'txt': mytxt})
+    if agent_free:
+        mytxt = sys.stdin.readline().rstrip()
+        if lower(mytxt) == ':q':
+            break
+        client.do_send({'speak': myname, 'txt': mytxt})
+
+        
+
+
