@@ -124,8 +124,6 @@ class Listener(asyncore.dispatcher):
             h.on_open()
             self.connections.append((port, host, sock))
 
-
-
     # API you can use
     def stop(self):
         self.close()
