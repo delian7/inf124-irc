@@ -29,4 +29,8 @@ thread.start()
 
 while 1:
     mytxt = sys.stdin.readline().rstrip()
-    client.do_send({'speak': myname, 'txt': mytxt})
+    options = {'1':'change order', '2':'cancel order', '3':'get ETA', '4':'ask general questions', '5':'quit'}
+    if mytxt in options:
+        client.do_send({'option': options[mytxt], 'txt': mytxt})
+    else:
+        print "Please enter a number from 1-5."
