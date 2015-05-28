@@ -16,7 +16,7 @@ class Client(Handler):
 
 host, port = 'localhost', 8888
 client = Client(host, port)
-client.do_send({'join': myname}, {'type': 'client'})
+client.do_send({'join': myname})
 
 def periodic_poll():
     while 1:

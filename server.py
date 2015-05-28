@@ -16,6 +16,7 @@ def createMenu():
 
 
 class MyHandler(Handler):
+	
 
 	def on_open(self):
                 pass
@@ -25,7 +26,9 @@ class MyHandler(Handler):
 
 	def on_msg(self, msg):
 		if type(msg) is dict:
-			if msg['type'] = 'client':	
+			if 'type' in msg and msg['type'] == agent:
+				#todo
+			else:
 				if 'join' in msg:
 					print msg
 					self.do_send('Hello ' + msg['join'] + '!\n' + createMenu())
@@ -34,9 +37,6 @@ class MyHandler(Handler):
 					agentMessage = "Checking for available agent now..."
 					self.do_send('You would like to ' + msg['option'] + '. ' + agentMessage)
 					self.do_send(check_agent())
-					init_chat()
-			if msg['type'] = 'agent':
-				#todo
 
 		else:
 			print msg
