@@ -16,7 +16,7 @@ class Client(Handler):
 
 host, port = 'localhost', 8888
 client = Client(host, port)
-client.do_send({'join': myname})
+client.do_send({'join': myname}, {'type': 'client'})
 
 def periodic_poll():
     while 1:
@@ -36,7 +36,7 @@ while 1:
     if mytxt == ':e':
         print 'lolololololol'
     elif mytxt == ":s":
-        output_to_file()
+        #todo
     
     if mytxt in options:
         client.do_send({'option': options[mytxt], 'txt': mytxt})
