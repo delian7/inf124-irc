@@ -2,7 +2,7 @@ from network import Handler, poll
 import sys
 from threading import Thread
 from time import sleep
-from server import output_to_file
+# from server import output_to_file
 
 myname = raw_input('What is your name? ')
 
@@ -26,6 +26,8 @@ def periodic_poll():
 thread = Thread(target=periodic_poll)
 thread.daemon = True  # die when the main thread dies
 thread.start()
+
+
 
 while 1:
     mytxt = sys.stdin.readline().rstrip()
