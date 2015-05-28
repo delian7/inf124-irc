@@ -1,24 +1,41 @@
-from network import Handler, poll
+from network import Handler, poll, get_my_ip
+import sys
+from threading import Thread
+from time import sleep
+from random import randint
 
 class Agent(Handler):
-	def __init__(self, host, port):
-		Handler.__init__(host, AGENT_PORT)
+	def __init__ (self, host, port, sock=None):
+		Handler.__init__(self, host, port, sock)
 
 	def on_msg(self, msg):
 		#todo
-
-	def on_open(self):
-		pass
+		if type(msg) is dict:
+		    ip, port = msg['address'].split(":")
+		    agent = ClientConnect(ip, port)
+		else:
+			print msg
 
 	def on_close(self):
 		pass
 
+class ClientConnect(Handler):
 
+    def on_close(self):
+        pass
+
+    def on_msg(self, msg):
+        print msg
+
+    def on_open(self):
+		print "Now Connected"
 
 
 host, port = 'localhost', 8888
+AGENT_PORT = randint(20000,30000)
+address = get_my_ip() + ":" + str(AGENT_PORT)
 agent = Agent(host, port)
-agent.do_send({'type': 'agent'})
+agent.do_send({'type':"agent", "address":address})
 
 def periodic_poll():
     while 1:
@@ -31,3 +48,4 @@ thread.start()
 
 while 1:
     #todo
+    mytxt = sys.stdin.readline().rstrip()

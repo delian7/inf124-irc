@@ -1,4 +1,5 @@
 from network import Listener, Handler, poll
+from collections import deque
 
 SERVER_PORT = 8888
 HOST = "localhost"
@@ -12,76 +13,73 @@ def createMenu():
 	option4 = "4: Ask general questions?"
 	option5 = "5: Exit"
 
-	return opening + "\n" + option1 + "\n" + option2 + "\n" + option3 + "\n" + option4 + "\n" + option
+	return opening + "\n" + option1 + "\n" + option2 + "\n" + option3 + "\n" + option4 + "\n" + option5
 
+clients = deque([])
+agentAddress = None
+agent_free = True
+agent_handler = None
 
 class MyHandler(Handler):
-	
+
+	def __init__ (self, host, port, sock=None):
+		Handler.__init__(self, host, port, sock)
 
 	def on_open(self):
-                pass
+		pass
 
 	def on_close(self):
 		pass
 
 	def on_msg(self, msg):
 		if type(msg) is dict:
-			if 'type' in msg and msg['type'] == agent:
+			if 'type' in msg and msg['type'] == "agent":
+				agent_handler = self
+				agentAddress = msg['address']
+				agent_free = True
+				agent_handler.do_send("HI!")
 				#todo
 			else:
 				if 'join' in msg:
+					clients.append(msg['address'])
 					print msg
 					self.do_send('Hello ' + msg['join'] + '!\n' + createMenu())
 				elif 'option' in msg:
 					print msg
 					agentMessage = "Checking for available agent now..."
-					self.do_send('You would like to ' + msg['option'] + '. ' + agentMessage)
-					self.do_send(check_agent())
+					self.do_send('You would like to ' + msg['option'] + '. ' + agentMessage  + "\n")
+					self._check_agent()
+					self._init_chat()
 
 		else:
 			print msg
 	
 
-	def _check_agent():
+	def _check_agent(self):
 		if agent_free:
-			return "Now connecting to an agent.", 
+			self._take_client()
+			return
 		else:
-			return "Agent is busy. You will now be added into a queue.\n Please wait...."
+			self.do_send("Agent is busy. You will now be added into a queue.\nPlease wait....\n")
+			while not agent_free:
+				pass
+			self._take_client()
+			return
+
+	def _take_client(self):
+		agent_free = False
+		agent_handler.do_send({"address":clients.popleft()})
+		self.do_send("Now connecting to an agent.\n")
 
 	def _init_chat(self):
-		if agent_free:
-
-					
-			
-class ServerListener(Listener):
-	#inherits from listener
-
-	def __init__(self, port, handler_class):
-		Listener.__init__(self, SERVER_PORT, handler_class)
-		self.clients = []
-		self.agents = []
-		self.agent_free = True;
-		
-
-	def handle_accept(self):
-		accept_result = self.accept()
-        if accept_result:  # None if connection blocked or aborted
-            sock, (host, port) = accept_result
-            h = self.handler_class(host, port, sock)
-            self.on_accept(h)
-            h.on_open()
-            self.connections.append((port, host, sock))
-
-	def print_clients(self):
-		for item in self.connections:
-			print str(item[0]) + " " + str(item[1])
+		self.do_send({'type': "agent-connect", "address":agentAddress})
 
 
 
 # port = 8888
 # server = ServerListener(port, MyHandler)
 
-server = ServerListener(SERVER_PORT, MyHandler)
+server = Listener(SERVER_PORT, MyHandler)
 
 while 1:
 	poll(timeout=0.05) # in seconds

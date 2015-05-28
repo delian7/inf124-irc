@@ -1,7 +1,8 @@
-from network import Handler, poll
+from network import Handler, poll, get_my_ip
 import sys
 from threading import Thread
 from time import sleep
+from random import randint
 # from server import output_to_file
 
 myname = raw_input('What is your name? ')
@@ -12,11 +13,31 @@ class Client(Handler):
         pass
 
     def on_msg(self, msg):
+        if type(msg) is dict:
+            ip, port = msg['address'].split(":")
+            agent = ClientConnect(ip, port)
+        else:
+            print msg       
+
+
+class AgentConnect(Handler):
+
+    def on_close(self):
+        pass
+
+    def on_msg(self, msg):
         print msg
 
+    def on_open(self):
+        print "Now Connected"
+
+
+
 host, port = 'localhost', 8888
+CLIENT_PORT = randint(20000,30000)
+address = get_my_ip() + ":" + str(CLIENT_PORT)
 client = Client(host, port)
-client.do_send({'join': myname})
+client.do_send({'join': myname, "address":address})
 
 def periodic_poll():
     while 1:
@@ -37,7 +58,8 @@ while 1:
         print 'lolololololol'
     elif mytxt == ":s":
         #todo
-    
+        pass
+
     if mytxt in options:
         client.do_send({'option': options[mytxt], 'txt': mytxt})
     elif mytxt == '5' or mytxt.lower() == ':q':
