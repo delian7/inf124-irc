@@ -28,22 +28,22 @@ def createMenu():
 
 	return opening + "\n" + option1 + "\n" + option2 + "\n" + option3 + "\n" + option4 + "\n" + option5
 
-<<<<<<< Updated upstream
+
 def output_to_file():
         pass
-=======
-def init_chat():
-	if type(msg) is dict:
-		if 'join' in msg:
-			print msg
-			self.do_send('Hello ' + msg['join'] + '!\n' + createMenu())
-		elif 'option' in msg:
-			print msg
-			agentMessage = "Checking for available agent now..."
-			self.do_send('You would like to ' + msg['option'] + '. ' + agentMessage +"\n")
-			agent.connect(("", AGENT_PORT))
-			return 
->>>>>>> Stashed changes
+# =======
+# def init_chat():
+# 	if type(msg) is dict:
+# 		if 'join' in msg:
+# 			print msg
+# 			self.do_send('Hello ' + msg['join'] + '!\n' + createMenu())
+# 		elif 'option' in msg:
+# 			print msg
+# 			agentMessage = "Checking for available agent now..."
+# 			self.do_send('You would like to ' + msg['option'] + '. ' + agentMessage +"\n")
+# 			agent.connect(("", AGENT_PORT))
+# 			return 
+# >>>>>>> Stashed changes
 
 
 class MyHandler(Handler):
@@ -55,7 +55,6 @@ class MyHandler(Handler):
 		pass
 
 	def on_msg(self, msg):
-<<<<<<< Updated upstream
 		if type(msg) is dict:
 			if 'join' in msg:
 				print msg
@@ -67,16 +66,15 @@ class MyHandler(Handler):
 		else:
 			print msg
 
-=======
-		if agent_free:
-			self.connect(("", AGENT_PORT))
-			init_chat()
-		else:
-			handlers.append(self)
+# =======
+# 		if agent_free:
+# 			self.connect(("", AGENT_PORT))
+# 			init_chat()
+# 		else:
+# 			handlers.append(self)
 
 					
 			
->>>>>>> Stashed changes
 class ServerListener(Listener):
 
 	#inherits from listener
@@ -94,14 +92,13 @@ class ServerListener(Listener):
 			print str(item[0]) + " " + str(item[1])
 
 
-<<<<<<< Updated upstream
+
 
 port = 8888
 server = ServerListener(port, MyHandler)
-=======
-server = ServerListener(SERVER_PORT, MyHandler)
-agent = Agent("localhost", AGENT_PORT)
 
->>>>>>> Stashed changes
+# server = ServerListener(SERVER_PORT, MyHandler)
+# agent = Agent("localhost", AGENT_PORT)
+
 while 1:
 	poll(timeout=0.05) # in seconds
