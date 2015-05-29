@@ -15,13 +15,12 @@ class Client(Handler):
     def on_msg(self, msg):
         if type(msg) is dict:
             ip, port = msg['address'].split(":")
-            agent = ClientConnect(ip, port)
+            agent = AgentConnect(ip, int(port))
         else:
             print msg       
 
 
 class AgentConnect(Handler):
-
     def on_close(self):
         pass
 
@@ -35,7 +34,7 @@ class AgentConnect(Handler):
 
 host, port = 'localhost', 8888
 CLIENT_PORT = randint(20000,30000)
-address = get_my_ip() + ":" + str(CLIENT_PORT)
+address = get_my_ip() + ":"  + str(CLIENT_PORT)
 client = Client(host, port)
 client.do_send({'join': myname, "address":address})
 

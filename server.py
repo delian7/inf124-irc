@@ -34,6 +34,9 @@ class MyHandler(Handler):
 	def on_msg(self, msg):
 		if type(msg) is dict:
 			if 'type' in msg and msg['type'] == "agent":
+				global agentAddress
+				global agent_free
+				global agent_handler
 				agent_handler = self
 				agentAddress = msg['address']
 				agent_free = True
@@ -74,9 +77,6 @@ class MyHandler(Handler):
 	def _init_chat(self):
 		self.do_send({'type': "agent-connect", "address":agentAddress})
 
-
-
-# port = 8888
 # server = ServerListener(port, MyHandler)
 
 server = Listener(SERVER_PORT, MyHandler)

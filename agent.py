@@ -12,7 +12,7 @@ class Agent(Handler):
 		#todo
 		if type(msg) is dict:
 		    ip, port = msg['address'].split(":")
-		    agent = ClientConnect(ip, port)
+		    agent = ClientConnect(ip, int(port))
 		else:
 			print msg
 

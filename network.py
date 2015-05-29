@@ -110,7 +110,7 @@ class Listener(asyncore.dispatcher):
     def __init__(self, port, handler_class):
         asyncore.dispatcher.__init__(self)
         self.handler_class = handler_class
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)  # TCP
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM) # TCP
         self.bind(('', port))
         self.listen(5)
         self.connections = [] # max 5 incoming connections at once (Windows' limit)
