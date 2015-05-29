@@ -72,7 +72,7 @@ class MyHandler(Handler):
 
 	def _take_client(self):
 		agent_free = False
-		agent_handler.do_send({"address":clients.popleft()})
+		agent_handler.do_send({"address":agentAddress})
 		self.do_send("Now connecting to an agent.\n")
 
 	def _init_chat(self):

@@ -1,8 +1,10 @@
-from network import Handler, poll, get_my_ip
+from network import Listener, Handler, poll, get_my_ip
 import sys
 from threading import Thread
 from time import sleep
 from random import randint
+
+client = None
 
 class Agent(Handler):
 	def __init__ (self, host, port, sock=None):
@@ -12,8 +14,10 @@ class Agent(Handler):
 		#todo
 		if type(msg) is dict:
 		    ip, port = msg['address'].split(":")
+		    print msg['address']
 		    global client
-		    client = ClientConnect(ip, int(port))
+		    client = Listener(AGENT_PORT, ClientConnect)
+		    print "IM CONNECTED!!!!"
 		else:
 			print msg
 
@@ -26,7 +30,7 @@ class ClientConnect(Handler):
         pass
 
     def on_msg(self, msg):
-        self.do_send(msg)
+        print msg
 
     def on_open(self):
 		print "Now Connected"
@@ -48,6 +52,7 @@ thread.daemon = True  # die when the main thread dies
 thread.start()
 
 while 1:
+	pass
     #todo
-    mytxt = sys.stdin.readline().rstrip()
-    client.do_send({'type':"chat", "msg":mytxt})
+    # mytxt = sys.stdin.readline().rstrip()
+    # client.do_send({'type':"chat", "msg":mytxt})

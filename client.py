@@ -1,4 +1,4 @@
-from network import Handler, poll, get_my_ip
+from network import Listener, Handler, poll, get_my_ip
 import sys
 from threading import Thread
 from time import sleep
@@ -6,6 +6,7 @@ from random import randint
 # from server import output_to_file
 
 agent = None
+
 
 myname = raw_input('What is your name? ')
 
@@ -17,8 +18,9 @@ class Client(Handler):
     def on_msg(self, msg):
         if type(msg) is dict:
             ip, port = msg['address'].split(":")
+            print msg['address']
             global agent
-            agent = AgentConnect(ip, int(port))
+            agent = AgentConnect(ip , int(port))
         else:
             print msg       
 
@@ -28,13 +30,10 @@ class AgentConnect(Handler):
         pass
 
     def on_msg(self, msg):
-        self.do_send({"type":"chat", "msg":msg})
+        print msg
 
     def on_open(self):
         print "Now Connected"
-
-    
-
 
 
 host, port = 'localhost', 8888
