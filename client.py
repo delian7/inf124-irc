@@ -8,7 +8,7 @@ from random import randint
 agent = None
 
 
-myname = raw_input('What is your name? ')
+
 
 class Client(Handler):
 
@@ -36,7 +36,11 @@ class AgentConnect(Handler):
         print "Now Connected"
 
 
-host, port = '128.195.6.160', 8888
+myname = raw_input("\n\n" + "*" * 40 + "\n"
+    + "*     Welcome to MobaBoba Chat!        *\n" +
+    "*" * 40 + "\n\n"
+    "Please enter your name: ")
+host, port = '128.195.6.146', 8888
 CLIENT_PORT = randint(20000,30000)
 address = get_my_ip() + ":"  + str(CLIENT_PORT)
 client = Client(host, port)
@@ -68,7 +72,7 @@ while 1:
             sys.exit()
     else:
         if mytxt in options:
-            client.do_send({'option': options[mytxt], 'txt': mytxt})
+            client.do_send({'option': options[mytxt], 'txt': mytxt, "name":myname})
         elif mytxt == '5':
             print "Closing connection to server."
             sys.exit()

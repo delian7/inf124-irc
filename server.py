@@ -40,7 +40,7 @@ class MyHandler(Handler):
 				agent_handler = self
 				agentAddress = msg['address']
 				agent_free = True
-				agent_handler.do_send("HI!")
+				agent_handler.do_send("Hello Agent " + msg['join'] + "\n" + "Lets wait for a customer....\n")
 				#todo
 			else:
 				if 'join' in msg:
@@ -52,12 +52,17 @@ class MyHandler(Handler):
 					print msg
 					agentMessage = "Checking for available agent now..."
 					self.do_send('You would like to ' + msg['option'] + '. ' + agentMessage  + "\n")
+					self._notify_agent(msg["option"], msg['name'])
 					self._check_agent()
 					self._init_chat()
 
-		else:
+		else: 
 			print msg
 	
+
+	def _notify_agent(self, option, name):
+		agent_handler.do_send("The person we are about to connect you to wants to talk about:\n" + option+ "\n")
+		agent_handler.do_send("You're now chatting with: \n " + name+ "\n")
 
 	def _check_agent(self):
 		if agent_free:

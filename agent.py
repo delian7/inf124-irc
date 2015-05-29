@@ -18,7 +18,6 @@ class Agent(Handler):
 		    print msg['address']
 		    global client
 		    client = Listener(AGENT_PORT, ClientConnect)
-		    print "IM CONNECTED!!!!"
 		else:
 			print msg
 
@@ -39,11 +38,15 @@ class ClientConnect(Handler):
     	print "Now Connected"
 
 
-host, port = '128.195.6.160', 8888
+name = raw_input("\n\n" + "*" * 40 + "\n"
+	+ "*     Welcome to MobaBoba Chat!        *\n" +
+	"*" * 40 + "\n\n"
+	"Please enter your name, agent: ")
+host, port = '128.195.6.146', 8888
 AGENT_PORT = randint(20000,30000)
 address = get_my_ip() + ":" + str(AGENT_PORT)
 agent = Agent(host, port)
-agent.do_send({'type':"agent", "address":address})
+agent.do_send({'type':"agent", "address":address, "join":name})
 
 def periodic_poll():
     while 1:
