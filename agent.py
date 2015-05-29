@@ -39,7 +39,7 @@ class ClientConnect(Handler):
     	print "Now Connected"
 
 
-host, port = 'localhost', 8888
+host, port = '128.195.6.160', 8888
 AGENT_PORT = randint(20000,30000)
 address = get_my_ip() + ":" + str(AGENT_PORT)
 agent = Agent(host, port)
@@ -55,7 +55,7 @@ thread.daemon = True  # die when the main thread dies
 thread.start()
 
 while 1:
-	mytxt = sys.stdin.readline().rstrip()
+	mytxt = raw_input()
 	handler.do_send(mytxt)
     #todo
     # mytxt = sys.stdin.readline().rstrip()
