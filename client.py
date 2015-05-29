@@ -57,7 +57,7 @@ while 1:
     mytxt = sys.stdin.readline().rstrip()
     options = {'1':'change order', '2':'cancel order', '3':'get ETA', '4':'ask general questions'}
     if agent:
-        agent.do_send({'type':"chat", "msg": mytxt})
+        agent.do_send(mytxt)
         if mytxt == ':e':
             print 'lolololololol'
         elif mytxt == ":s":

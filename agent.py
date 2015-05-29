@@ -56,7 +56,7 @@ thread.start()
 
 while 1:
 	mytxt = sys.stdin.readline().rstrip()
-	handler.do_send({'type':"chat", "msg":mytxt})
+	handler.do_send(mytxt)
     #todo
     # mytxt = sys.stdin.readline().rstrip()
     # client.do_send({'type':"chat", "msg":mytxt})
