@@ -12,7 +12,8 @@ class Agent(Handler):
 		#todo
 		if type(msg) is dict:
 		    ip, port = msg['address'].split(":")
-		    agent = ClientConnect(ip, int(port))
+		    global client
+		    client = ClientConnect(ip, int(port))
 		else:
 			print msg
 
@@ -25,7 +26,7 @@ class ClientConnect(Handler):
         pass
 
     def on_msg(self, msg):
-        print msg
+        self.do_send(msg)
 
     def on_open(self):
 		print "Now Connected"
@@ -49,3 +50,4 @@ thread.start()
 while 1:
     #todo
     mytxt = sys.stdin.readline().rstrip()
+    client.do_send({'type':"chat", "msg":mytxt})
