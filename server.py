@@ -29,7 +29,7 @@ class MyHandler(Handler):
 		pass
 
 	def on_close(self):
-		pass
+		self.close()
 
 	def on_msg(self, msg):
 		if type(msg) is dict:
@@ -44,6 +44,7 @@ class MyHandler(Handler):
 				#todo
 			else:
 				if 'join' in msg:
+					global clients
 					clients.append(msg['address'])
 					print msg
 					self.do_send('Hello ' + msg['join'] + '!\n' + createMenu())
