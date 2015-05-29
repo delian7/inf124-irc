@@ -5,6 +5,7 @@ from time import sleep
 from random import randint
 
 client = None
+handler = None
 
 class Agent(Handler):
 	def __init__ (self, host, port, sock=None):
@@ -33,7 +34,9 @@ class ClientConnect(Handler):
         print msg
 
     def on_open(self):
-		print "Now Connected"
+    	global handler
+    	handler = self
+    	print "Now Connected"
 
 
 host, port = 'localhost', 8888
@@ -52,7 +55,8 @@ thread.daemon = True  # die when the main thread dies
 thread.start()
 
 while 1:
-	pass
+	mytxt = sys.stdin.readline().rstrip()
+	handler.do_send({'type':"chat", "msg":mytxt})
     #todo
     # mytxt = sys.stdin.readline().rstrip()
     # client.do_send({'type':"chat", "msg":mytxt})
