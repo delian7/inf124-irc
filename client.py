@@ -8,8 +8,6 @@ from random import randint
 agent = None
 
 
-
-
 class Client(Handler):
 
     def on_close(self):
@@ -24,7 +22,6 @@ class Client(Handler):
         else:
             print msg       
 
-
 class AgentConnect(Handler):
     def on_close(self):
         pass
@@ -37,10 +34,10 @@ class AgentConnect(Handler):
 
 
 myname = raw_input("\n\n" + "*" * 40 + "\n"
-    + "*     Welcome to MobaBoba Chat!        *\n" +
+    + "*       Welcome to MobaBoba Chat!      *\n" +
     "*" * 40 + "\n\n"
     "Please enter your name: ")
-host, port = '128.195.6.146', 8888
+host, port = '128.195.6.162', 8888
 CLIENT_PORT = randint(20000,30000)
 address = get_my_ip() + ":"  + str(CLIENT_PORT)
 client = Client(host, port)
@@ -54,8 +51,6 @@ def periodic_poll():
 thread = Thread(target=periodic_poll)
 thread.daemon = True  # die when the main thread dies
 thread.start()
-
-
 
 while 1:
     mytxt = raw_input("")

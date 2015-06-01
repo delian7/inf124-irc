@@ -4,8 +4,8 @@ from threading import Thread
 from time import sleep
 from random import randint
 
-client = None
 handler = None
+server_handler = None
 
 class Agent(Handler):
 	def __init__ (self, host, port, sock=None):
@@ -16,13 +16,16 @@ class Agent(Handler):
 		if type(msg) is dict:
 		    ip, port = msg['address'].split(":")
 		    print msg['address']
-		    global client
-		    client = Listener(AGENT_PORT, ClientConnect)
 		else:
 			print msg
 
 	def on_close(self):
 		pass
+
+	def on_open(self):
+		global server_handler
+		server_handler = self
+    	print "Now Connected"
 
 class ClientConnect(Handler):
 
@@ -30,7 +33,10 @@ class ClientConnect(Handler):
         pass
 
     def on_msg(self, msg):
+    	if msg == ":q":
+    		server_handler.do_send({'quit':":q", 'type':'agent'})
         print msg
+
 
     def on_open(self):
     	global handler
@@ -42,9 +48,11 @@ name = raw_input("\n\n" + "*" * 40 + "\n"
 	+ "*     Welcome to MobaBoba Chat!        *\n" +
 	"*" * 40 + "\n\n"
 	"Please enter your name, agent: ")
-host, port = '128.195.6.146', 8888
+host, port = '128.195.6.162', 8888
 AGENT_PORT = randint(20000,30000)
+print get_my_ip() + " Listener PORT:" + str(AGENT_PORT)
 address = get_my_ip() + ":" + str(AGENT_PORT)
+client = Listener(AGENT_PORT, ClientConnect)
 agent = Agent(host, port)
 agent.do_send({'type':"agent", "address":address, "join":name})
 
