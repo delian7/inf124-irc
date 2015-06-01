@@ -22,3 +22,5 @@ to either:
 
 	-run localhost
 	-change the hardcoded IP address in both agent and client
+
+	for the sake of simplicity.... the host is hardcoded to "localhost"
