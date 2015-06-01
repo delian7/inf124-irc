@@ -15,13 +15,11 @@ def createMenu():
 
 	return opening + "\n" + option1 + "\n" + option2 + "\n" + option3 + "\n" + option4 + "\n" + option5
 
-global clients
-clients = deque([])
+client_msgs = deque([])
+client_handlers = deque([])
 agentAddress = None
-global agent_free
 agent_free = False
 agent_handler = None
-client_handlers = deque([])
 
 class MyHandler(Handler):
 
@@ -46,7 +44,6 @@ class MyHandler(Handler):
 					print "User Quit. Waiting for another user...."
 					self.set_free()
 					print "Free"
-					global clients
 					self._check_waiting()
 				#todo
 			else:
@@ -54,10 +51,8 @@ class MyHandler(Handler):
 					print msg
 					self.do_send('Hello ' + msg['join'] + '!\n' + createMenu())
 				elif 'option' in msg:
-					global clients
-					clients.append(msg)
 					global client_handlers
-					clients_handlers.append(self)
+					client_handlers.append(self)
 					print msg
 					agentMessage = "Checking for available agent now..."
 					self.do_send('You would like to ' + msg['option'] + '. ' + agentMessage  + "\n")
@@ -78,8 +73,8 @@ class MyHandler(Handler):
 			self._init_chat()
 		else:
 			self.do_send("Agent is busy. You will now be added into a queue.\nPlease wait....\n")
-			# global clients
-			# clients.append(msg)
+			global client_msgs
+			client_msgs.append(msg)
 
 	def _take_client(self):
 		global agent_free
@@ -87,16 +82,19 @@ class MyHandler(Handler):
 		self.do_send("Now connecting to an agent.\n")
 
 	def _init_chat(self):
-		self.do_send({'type': "agent-connect", "address":agentAddress})
+		global client_handlers
+		handler = client_handlers.popleft()
+		handler.do_send({'type': "agent-connect", "address":agentAddress})
 
 	def set_free(self):
 		global agent_free
 		agent_free = True
 
 	def _check_waiting(self):
-		if len(clients) > 0:
-			global clients
-			self._check_agent(clients.popleft())
+		if len(client_handlers) > 0:
+			global client_msgs
+			self._check_agent(client_msgs.popleft())
+	
 
 # server = ServerListener(port, MyHandler)
 
