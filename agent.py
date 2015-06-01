@@ -7,6 +7,11 @@ from random import randint
 handler = None
 server_handler = None
 
+def output_to_file(log):
+	with open('chatlog.txt', 'a') as f:
+		for line in log:
+			f.write(line+"\n")
+
 class Agent(Handler):
 	def __init__ (self, host, port, sock=None):
 		Handler.__init__(self, host, port, sock)
@@ -28,20 +33,30 @@ class Agent(Handler):
     	print "Now Connected"
 
 class ClientConnect(Handler):
+	
+	def __init__(self, host, port, sock=None):
+		Handler.__init__(self, host, port, sock)
+		self.log = []
 
-    def on_close(self):
-        pass
+	def on_close(self):
+		pass
 
-    def on_msg(self, msg):
-    	if msg == ":q":
-    		server_handler.do_send({'quit':":q", 'type':'agent'})
-        print msg
+	def on_msg(self, msg):
+		print msg
+		if msg == ":q":
+			server_handler.do_send({'quit':":q", 'type':'agent'})
+		elif msg == ":s":
+			output_to_file(self.log)
+		else:
+			self.log.append(msg)
 
-
-    def on_open(self):
-    	global handler
-    	handler = self
-    	print "Now Connected"
+	def on_open(self):
+		global handler
+		handler = self
+		print "Now Connected"
+		
+	def appendChat(self, msg):
+		self.log.append(msg)
 
 
 name = raw_input("\n\n" + "*" * 40 + "\n"
@@ -68,6 +83,7 @@ thread.start()
 while 1:
 	mytxt = raw_input()
 	handler.do_send(mytxt)
+	handler.appendChat(mytxt)
     #todo
     # mytxt = sys.stdin.readline().rstrip()
     # client.do_send({'type':"chat", "msg":mytxt})

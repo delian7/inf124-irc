@@ -60,8 +60,7 @@ while 1:
         if mytxt == ':e':
             print 'lolololololol'
         elif mytxt == ":s":
-            #todo
-            pass
+            print 'Chat saved.'
         elif mytxt == ":q":
             print "Closing connection to server."
             sys.exit()
