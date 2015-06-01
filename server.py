@@ -1,9 +1,13 @@
+"""
+PLEASE READ THE READ ME FIRST!!!!!!!!!!
+"""
+
 from network import Listener, Handler, poll
 from collections import deque
+import sys
 
 SERVER_PORT = 8888
 HOST = ""
-handlers = {}  # map client handler to user name
 
 def createMenu():
 	#used to update client view
@@ -21,6 +25,7 @@ client_handlers = deque([])
 agentAddress = None
 agent_free = False
 agent_handler = None
+current_handler = None
 
 class MyHandler(Handler):
 
@@ -40,10 +45,11 @@ class MyHandler(Handler):
 					global agent_handler
 					agent_handler = self
 					self.set_free()
-					agent_handler.do_send("Hello Agent " + msg['join'] + "\n" + "Lets wait for a customer....\n")
+					agent_handler.do_send("\nHello Agent " + msg['join'] + "\n" + "Lets wait for a customer....\n")
 				elif 'quit' in msg:
 					agent_handler.do_send("User Quit. Waiting for another user....\n")
 					self.set_free()
+
 					#checks to see if others are waiting
 					self._check_waiting()
 				#todo
@@ -52,6 +58,7 @@ class MyHandler(Handler):
 					print msg
 					self.do_send('Hello ' + msg['join'] + '!\n' + createMenu())
 				elif 'option' in msg:
+
 					#add to clients handlers for when we need to notify them..
 					global client_handlers
 					client_handlers.append(self)
@@ -60,6 +67,7 @@ class MyHandler(Handler):
 
 					agentMessage = "Checking for available agent now..."
 					self.do_send('You would like to ' + msg['option'] + '. ' + agentMessage  + "\n")
+
 					self._check_agent(msg)
 
 		else: 
@@ -91,6 +99,8 @@ class MyHandler(Handler):
 		#gets rid of the handler to the client being taken
 		global client_handlers
 		handler = client_handlers.popleft()
+		global current_handler
+		current_handler = handler
 		handler.do_send("Now connecting to an agent.\n")
 		handler.do_send({'type': "agent-connect", "address":agentAddress})
 
@@ -109,4 +119,23 @@ class MyHandler(Handler):
 server = Listener(SERVER_PORT, MyHandler)
 
 while 1:
-	poll(timeout=0.05) # in seconds
+	try:
+		poll(timeout=0.05) # in seconds
+	except:
+		if agent_handler:
+			agent_handler.do_send("Server Disconnected... Now Closing")
+			agent_handler.do_send({"kill":""})
+			agent_handler.close()
+		if current_handler:
+			current_handler.do_send("Server Disconnected... Now Closing")
+			current_handler.do_send({"kill":""})
+			current_handler.close()
+		for handler in client_handlers:
+			handler.do_send("Server Disconnected... Now Closing")
+			handler.do_send({"kill":""})
+			handler.close()
+		print "SERVER QUIT"
+		server.close()
+		sys.exit()
+
+
