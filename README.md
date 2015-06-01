@@ -12,3 +12,7 @@ You must run in this sequence to ensure completeness:
 server -> agent -> client
 
 Agents must log in before any clients connect!!!!
+
+:s saves on both the client and agent sides.
+
+ctrl + C to kill the server. This will then kill the clients and agents.
