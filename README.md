@@ -13,6 +13,12 @@ server -> agent -> client
 
 Agents must log in before any clients connect!!!!
 
-:s saves on both the client and agent sides.
+":s" saves on both the client and agent sides.
 
-ctrl + C to kill the server. This will then kill the clients and agents.
+"ctrl + C" to kill the server. This will then kill the clients and agents.
+
+If you're running your own server instance... please make sure
+to either:
+
+	-run localhost
+	-change the hardcoded IP address in both agent and client
