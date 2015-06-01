@@ -6,6 +6,7 @@ HOST = ""
 handlers = {}  # map client handler to user name
 
 def createMenu():
+	#used to update client view
 	opening = "Please choose from the following menu (Enter the number):"
 	option1 = "1: Change order"
 	option2 = "2: Cancel order"
@@ -41,9 +42,9 @@ class MyHandler(Handler):
 					self.set_free()
 					agent_handler.do_send("Hello Agent " + msg['join'] + "\n" + "Lets wait for a customer....\n")
 				elif 'quit' in msg:
-					print "User Quit. Waiting for another user...."
+					agent_handler.do_send("User Quit. Waiting for another user....\n")
 					self.set_free()
-					print "Free"
+					#checks to see if others are waiting
 					self._check_waiting()
 				#todo
 			else:
@@ -51,9 +52,12 @@ class MyHandler(Handler):
 					print msg
 					self.do_send('Hello ' + msg['join'] + '!\n' + createMenu())
 				elif 'option' in msg:
+					#add to clients handlers for when we need to notify them..
 					global client_handlers
 					client_handlers.append(self)
+
 					print msg
+
 					agentMessage = "Checking for available agent now..."
 					self.do_send('You would like to ' + msg['option'] + '. ' + agentMessage  + "\n")
 					self._check_agent(msg)
@@ -68,35 +72,39 @@ class MyHandler(Handler):
 
 	def _check_agent(self, msg):
 		if agent_free:
+			#take the chat
 			self._take_client()
 			self._notify_agent(msg["option"], msg['name'])
 			self._init_chat()
 		else:
 			self.do_send("Agent is busy. You will now be added into a queue.\nPlease wait....\n")
+			#add the name and the option to a msg list for later connections
 			global client_msgs
 			client_msgs.append(msg)
 
 	def _take_client(self):
+		#makes agent budy
 		global agent_free
 		agent_free = False
-		self.do_send("Now connecting to an agent.\n")
 
 	def _init_chat(self):
+		#gets rid of the handler to the client being taken
 		global client_handlers
 		handler = client_handlers.popleft()
+		handler.do_send("Now connecting to an agent.\n")
 		handler.do_send({'type': "agent-connect", "address":agentAddress})
 
 	def set_free(self):
+		#sets agent free
 		global agent_free
 		agent_free = True
 
 	def _check_waiting(self):
+		#checks to see if there are any clients waiting
 		if len(client_handlers) > 0:
 			global client_msgs
 			self._check_agent(client_msgs.popleft())
 	
-
-# server = ServerListener(port, MyHandler)
 
 server = Listener(SERVER_PORT, MyHandler)
 

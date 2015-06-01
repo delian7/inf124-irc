@@ -4,6 +4,16 @@ from threading import Thread
 from time import sleep
 from random import randint
 
+name = raw_input("\n\n" + "*" * 40 + "\n"
+	+ "*     Welcome to MobaBoba Chat!        *\n" +
+	"*" * 40 + "\n\n"
+	"Please enter your name, agent: ")
+host, port = '128.195.6.162', 8888
+AGENT_PORT = randint(20000,30000)
+
+print get_my_ip() + " Listener PORT:" + str(AGENT_PORT)
+address = get_my_ip() + ":" + str(AGENT_PORT)
+
 handler = None
 server_handler = None
 
@@ -59,15 +69,10 @@ class ClientConnect(Handler):
 		self.log.append(msg)
 
 
-name = raw_input("\n\n" + "*" * 40 + "\n"
-	+ "*     Welcome to MobaBoba Chat!        *\n" +
-	"*" * 40 + "\n\n"
-	"Please enter your name, agent: ")
-host, port = '128.195.6.162', 8888
-AGENT_PORT = randint(20000,30000)
-print get_my_ip() + " Listener PORT:" + str(AGENT_PORT)
-address = get_my_ip() + ":" + str(AGENT_PORT)
+
+#create a listener for all single chats
 client = Listener(AGENT_PORT, ClientConnect)
+#create a connection to the server
 agent = Agent(host, port)
 agent.do_send({'type':"agent", "address":address, "join":name})
 

@@ -3,13 +3,18 @@ import sys
 from threading import Thread
 from time import sleep
 from random import randint
-# from server import output_to_file
 
+myname = raw_input("\n\n" + "*" * 40 + "\n"
+    + "*       Welcome to MobaBoba Chat!      *\n" +
+    "*" * 40 + "\n\n"
+    "Please enter your name: ")
+host, port = '128.195.6.162', 8888
+CLIENT_PORT = randint(20000,30000)
+address = get_my_ip() + ":"  + str(CLIENT_PORT)
 agent = None
 
 
 class Client(Handler):
-
     def on_close(self):
         pass
 
@@ -32,14 +37,7 @@ class AgentConnect(Handler):
     def on_open(self):
         print "Now Connected"
 
-
-myname = raw_input("\n\n" + "*" * 40 + "\n"
-    + "*       Welcome to MobaBoba Chat!      *\n" +
-    "*" * 40 + "\n\n"
-    "Please enter your name: ")
-host, port = '128.195.6.162', 8888
-CLIENT_PORT = randint(20000,30000)
-address = get_my_ip() + ":"  + str(CLIENT_PORT)
+#create connection to server
 client = Client(host, port)
 client.do_send({'join': myname, "address":address})
 
